@@ -11,3 +11,6 @@
 
 # Compiled Static libraries
 *.a
+
+# Directories
+build
