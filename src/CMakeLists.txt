@@ -1,4 +1,5 @@
 
+add_subdirectory(clock)
 add_subdirectory(builder)
 add_subdirectory(writer)
 add_subdirectory(logger)
