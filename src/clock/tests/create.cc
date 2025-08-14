@@ -1,4 +1,4 @@
-#include <clock/Clock.h>
+#include <clock/adding_clock/AddingClock.h>
 
 #include <cassert>
 #include <iostream>
@@ -17,14 +17,14 @@ using namespace std::chrono;
 
 int create(int argc, char* argv[])
 {
-    LoggerClock loggerClock;
+    AddingClock loggerClock;
     for (int i = 0; i < 100; ++i) {
         auto now = system_clock::now();
         auto clockTime = loggerClock.getTime();
 
         auto sys_sec =
             duration_cast<milliseconds>(now.time_since_epoch()).count();
-        
+
         auto clock_sec =
             duration_cast<milliseconds>(clockTime.time_since_epoch()).count();
 

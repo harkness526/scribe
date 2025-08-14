@@ -9,7 +9,7 @@ AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: Left
 AlignOperands:   true
 AlignTrailingComments: true
-AllowAllArgumentsOnNextLine: true
+AllowAllArgumentsOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Never
@@ -22,8 +22,8 @@ AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: true
-BinPackParameters: true
+BinPackArguments: false
+BinPackParameters: false
 BraceWrapping:
   AfterCaseLabel:  false
   AfterClass:      true

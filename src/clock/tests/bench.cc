@@ -1,4 +1,4 @@
-#include <clock/Clock.h>
+#include <clock/adding_clock/AddingClock.h>
 
 #include <chrono>
 #include <functional>
@@ -18,7 +18,7 @@ nanoseconds bench(std::function<void()> f)
 
 int bench(int argc, char* argv[])
 {
-    LoggerClock loggerClock;
+    AddingClock loggerClock;
     constexpr const long long ITERATIONS = 100000000;
 
     auto resSys = bench([]() {
