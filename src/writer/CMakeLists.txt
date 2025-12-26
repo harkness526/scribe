@@ -1,4 +1,7 @@
-add_library(writer OBJECT Writer.cc)
+file(GLOB SYNC_WRITER_SRC sync/*.cc )
+
+add_library(writer OBJECT ${SYNC_WRITER_SRC})
+target_include_directories(writer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB WRITER_TESTS_SRC tests/*.cc )
 set(UNIT_TESTS_SRC ${UNIT_TESTS_SRC} ${WRITER_TESTS_SRC} PARENT_SCOPE)
