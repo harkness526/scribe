@@ -1,4 +1,5 @@
 #include <clock/adding_clock/AddingClock.h>
+#include <gtest/gtest.h>
 
 #include <cassert>
 #include <iostream>
@@ -6,16 +7,7 @@
 
 using namespace std::chrono;
 
-#define EXPECT_EQ(left, right)                                                \
-    if (left == right) {                                                      \
-    } else {                                                                  \
-        std::cout << "EXPECT_EQ FAILED AT " << __FILE__ << ", line "          \
-                  << __LINE__ << std::endl;                                   \
-        std::cout << "left = " << left << ", right = " << right << std::endl; \
-        return -1;                                                            \
-    }
-
-int create(int argc, char* argv[])
+TEST(Clock, Create)
 {
     AddingClock loggerClock;
     for (int i = 0; i < 100; ++i) {
@@ -31,6 +23,4 @@ int create(int argc, char* argv[])
         EXPECT_EQ(sys_sec, clock_sec);
         std::this_thread::sleep_for(milliseconds(std::rand() % 20));
     }
-
-    return 0;
 }

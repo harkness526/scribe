@@ -1,4 +1,5 @@
 #include <clock/adding_clock/AddingClock.h>
+#include <gtest/gtest.h>
 
 #include <chrono>
 #include <functional>
@@ -16,10 +17,10 @@ nanoseconds bench(std::function<void()> f)
     return elapsed;
 }
 
-int bench(int argc, char* argv[])
+TEST(Clock, Bench)
 {
     AddingClock loggerClock;
-    constexpr const long long ITERATIONS = 100000000;
+    constexpr const long long ITERATIONS = 1000;
 
     auto resSys = bench([]() {
         for (int i = 0; i < ITERATIONS; ++i) {
@@ -35,6 +36,4 @@ int bench(int argc, char* argv[])
         }
     });
     std::cout << "Log Clock Time: " << resClock / 1ms << std::endl;
-
-    return 0;
 }

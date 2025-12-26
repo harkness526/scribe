@@ -1,9 +1,10 @@
 #include <builder/plane/PlaneBuilder.h>
+#include <gtest/gtest.h>
 
 #include <chrono>
 #include <iostream>
 
-int builder(int argc, char* argv[])
+TEST(Builder, SimpleEntry)
 {
     PlaneBuilder builder;
     std::string logEntry = builder.build(__FILE__,
@@ -12,5 +13,4 @@ int builder(int argc, char* argv[])
                                          "I am a Log Entry");
 
     std::cout << logEntry << std::endl;
-    return 0;
 }

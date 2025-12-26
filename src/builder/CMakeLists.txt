@@ -4,4 +4,6 @@ file(GLOB FORMATTED_BUILDER_SRC fmt_bulder/*.cc )
 add_library(builder OBJECT ${PLANE_BUILDER_SRC} ${FORMATTED_BUILDER_SRC})
 target_include_directories(builder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(tests)
+file(GLOB BUILDER_TESTS_SRC tests/*.cc )
+set(UNIT_TESTS_SRC ${UNIT_TESTS_SRC} ${BUILDER_TESTS_SRC} PARENT_SCOPE)
+set(UNIT_TESTS_LIBS ${UNIT_TESTS_LIBS} builder PARENT_SCOPE)

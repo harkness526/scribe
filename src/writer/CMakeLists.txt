@@ -1,1 +1,5 @@
 add_library(writer OBJECT Writer.cc)
+
+file(GLOB WRITER_TESTS_SRC tests/*.cc )
+set(UNIT_TESTS_SRC ${UNIT_TESTS_SRC} ${WRITER_TESTS_SRC} PARENT_SCOPE)
+set(UNIT_TESTS_LIBS ${UNIT_TESTS_LIBS} writer PARENT_SCOPE)
