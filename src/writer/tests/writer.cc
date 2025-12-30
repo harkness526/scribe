@@ -132,37 +132,45 @@ TEST(SyncWriter, RollWithOneWrite)
     }
 }
 
-// TEST(SyncWriter, checkLogsOnConstruction)
-// {
-//     constexpr const int LOG_COUNT = 10;
-//     constexpr const int NEEDED_LOG_COUNT = 1;
-//     std::srand((unsigned)time(NULL) * getpid());
+TEST(SyncWriter, checkLogsOnConstruction)
+{
+    constexpr const int LOG_COUNT = 10;
+    constexpr const int NEEDED_LOG_COUNT = 1;
+    std::srand((unsigned)time(NULL) * getpid());
 
-//     std::string logBaseName  = "sync_writer.log";
-//     std::vector<fs::path> logs;
-//     for (int i = 0; i < LOG_COUNT; ++i) {
-//         std::string logName = i == 0 ? logBaseName : logBaseName + "." + std::to_string(i);
-//         fs::path log = fs::current_path()/logName;
-//         std::ofstream f(log);
+    auto testForNeeded = [](int logCount, int neddedLogCount) {
+        std::string logBaseName  = "sync_writer.log";
+        std::vector<fs::path> logs;
+        for (int i = 0; i < logCount; ++i) {
+            std::string logName = i == 0 ? logBaseName : logBaseName + "." + std::to_string(i);
+            fs::path log = fs::current_path()/logName;
+            std::ofstream f(log);
 
-//         logs.push_back(log);
-//     }
+            logs.push_back(log);
+        }
 
-//     for(const auto& log: logs) {
-//         EXPECT_TRUE(fs::exists(log));
-//     }
+        for(const auto& log: logs) {
+            EXPECT_TRUE(fs::exists(log));
+        }
     
-//     SyncWriter writer(fs::current_path(), logBaseName, 100, NEEDED_LOG_COUNT);
+        SyncWriter writer(fs::current_path(), logBaseName, 100, neddedLogCount);
 
-//     for(int i = 0; i < LOG_COUNT; ++i) {
-//         if (i < NEEDED_LOG_COUNT) {
-//             EXPECT_TRUE(fs::exists(logs[i]));
-//         } else {
-//             EXPECT_FALSE(fs::exists(logs[i]));
-//         }
-//     }
+        for(int i = 0; i < logCount; ++i) {
+            if (i < neddedLogCount) {
+                EXPECT_TRUE(fs::exists(logs[i]));
+            } else {
+                EXPECT_FALSE(fs::exists(logs[i]));
+            }
+        }
 
-//     for (const auto& log: logs) {
-//         std::filesystem::remove(log);
-//     }
-// }
+        for (const auto& log: logs) {
+            std::filesystem::remove(log);
+        }
+    };
+
+    for (int logCount = 10; logCount > 0; --logCount) {
+        for (int neddedLogCount = 1; neddedLogCount < 10; ++neddedLogCount) {
+            testForNeeded(logCount, neddedLogCount);
+        }
+    }
+}

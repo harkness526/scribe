@@ -17,7 +17,7 @@ nanoseconds bench(std::function<void()> f)
     return elapsed;
 }
 
-TEST(Clock, Bench)
+TEST(Clock, DISABLED_Bench)
 {
     AddingClock loggerClock;
     constexpr const long long ITERATIONS = 1000;

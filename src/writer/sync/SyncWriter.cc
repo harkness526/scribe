@@ -68,7 +68,7 @@ size_t SyncWriter::parseLogFilename(std::string logFilename)
         return 0;
     }
     
-    auto number = logFilename.substr(baseFileName_.size());
+    auto number = logFilename.substr(baseFileName_.size() + 1);
     return std::stoi(number);
 }
 
@@ -88,11 +88,11 @@ size_t SyncWriter::findOldestLogIdx()
 void SyncWriter::preLaunchCleanup()
 {
     size_t oldestLogIdx = findOldestLogIdx();
-    if (oldestLogIdx <= maxFiles_) {
+    if (oldestLogIdx <= maxFiles_ - 1) {
         return;
     }
 
-    for (size_t i = maxFiles_; i < oldestLogIdx; ++i) {
+    for (size_t i = maxFiles_; i <= oldestLogIdx; ++i) {
         fs::remove(createLogFilename(i));
     }
 }
