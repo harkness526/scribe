@@ -35,7 +35,7 @@ std::string readFileContent(fs::path file)
 
 TEST(SyncWriter, WriteFixed)
 {
-    std::string log = "sync_writer";
+    std::string log = "sync_writer.log";
     std::filesystem::path path = std::filesystem::current_path();
     
     std::string msg1 = "I am a first entry";
@@ -123,7 +123,7 @@ TEST(SyncWriter, RollWithOneWrite)
     for (const auto& log: logs) {
         ASSERT_TRUE(fs::exists(log));
         std::string content = readFileContent(log);
-        EXPECT_EQ(content, (*it).append("\n"));
+        EXPECT_EQ(content, *it + "\n");
         it++;
     }
     

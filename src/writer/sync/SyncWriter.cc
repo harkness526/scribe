@@ -13,7 +13,7 @@ SyncWriter::SyncWriter(std::filesystem::path folder,
       maxFiles_(maxFiles)
       
 {
-    size_t oldestLogIdx = findOldestLogIdx();
+    preLaunchCleanup();
     
     log_ = std::ofstream(createLogFilename(0), std::ios_base::app);
     if (!log_) {
@@ -25,7 +25,7 @@ void SyncWriter::write(std::string&& entry)
 {
     if (currentSize_ + entry.size() > maxSize_) {
         roll();
-        log_ = std::ofstream(createLogFilename(0), std::ios_base::app);
+
     }
     
     log_ << entry << std::endl;
@@ -36,19 +36,24 @@ void SyncWriter::write(std::string&& entry)
 void SyncWriter::roll()
 {
     log_.flush();
-    for (int i = maxFiles_; i >= 0; --i) {
+    int maxLogIdx = maxFiles_ - 1;
+    
+    for (int i = maxLogIdx; i >= 0; --i) {
         fs::path log = createLogFilename(i);
         if (!fs::exists(log)) {
             continue;
         }
 
-        if (i == maxFiles_) {
+        if (i == maxLogIdx) {
             fs::remove(log);
             continue;
         }
 
         fs::rename(log, createLogFilename(i + 1));
     }
+    
+    log_ = std::ofstream(createLogFilename(0), std::ios_base::app);
+    currentSize_ = 0;
 }
 
 fs::path SyncWriter::createLogFilename(size_t fileIdx)
@@ -59,17 +64,35 @@ fs::path SyncWriter::createLogFilename(size_t fileIdx)
 
 size_t SyncWriter::parseLogFilename(std::string logFilename)
 {
-    return std::stoi(logFilename.substr(baseFileName_.size()));
+    if (logFilename == baseFileName_) {
+        return 0;
+    }
+    
+    auto number = logFilename.substr(baseFileName_.size());
+    return std::stoi(number);
 }
 
 size_t SyncWriter::findOldestLogIdx()
 {
-    size_t amount = 0;
+    size_t maxLogIdx = 0;
     for (const auto& dir_entry : fs::directory_iterator(folder_)) {
-        if (dir_entry.path().filename().string().starts_with(baseFileName_)) {
-            ++amount;
+        std::string filename = dir_entry.path().filename().string();
+        if (filename.starts_with(baseFileName_)) {
+            maxLogIdx = std::max(maxLogIdx, parseLogFilename(filename));
         }
     }
 
-    return amount;
+    return maxLogIdx;
+}
+
+void SyncWriter::preLaunchCleanup()
+{
+    size_t oldestLogIdx = findOldestLogIdx();
+    if (oldestLogIdx <= maxFiles_) {
+        return;
+    }
+
+    for (size_t i = maxFiles_; i < oldestLogIdx; ++i) {
+        fs::remove(createLogFilename(i));
+    }
 }

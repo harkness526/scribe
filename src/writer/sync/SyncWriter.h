@@ -18,7 +18,7 @@ protected:
     size_t findOldestLogIdx();
 
     void roll();
-    
+    void preLaunchCleanup();
 private:
     std::filesystem::path folder_;
     std::string baseFileName_;
