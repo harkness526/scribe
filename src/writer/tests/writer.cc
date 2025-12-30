@@ -1,4 +1,5 @@
 #include <writer/sync/SyncWriter.h>
+#include <writer/async/AsyncWriter.h>
 
 #include <gtest/gtest.h>
 
@@ -172,5 +173,50 @@ TEST(SyncWriter, checkLogsOnConstruction)
         for (int neddedLogCount = 1; neddedLogCount < 10; ++neddedLogCount) {
             testForNeeded(logCount, neddedLogCount);
         }
+    }
+}
+
+TEST(AsyncWriter, test)
+{
+    constexpr const int LOG_COUNT = 10;
+    std::srand((unsigned)time(NULL) * getpid());
+    std::vector<fs::path> logs;
+    
+    std::string logBaseName  = "async_writer.log";
+    for (int i = 0; i < LOG_COUNT; ++i) {
+    std::string logName = i == 0 ? logBaseName : logBaseName + "." + std::to_string(i);
+    fs::path log = fs::current_path() / logName;
+    logs.push_back(log);
+    }
+
+    for(const auto& log: logs) {
+        EXPECT_FALSE(fs::exists(log));
+    }
+
+    std::vector<std::string> entries;
+    for (int i = 0; i < 100; ++i) {
+        int len = 100 + std::rand() % 50;
+        std::string entry = genRandomString(len);
+
+        entries.push_back(entry);
+    }
+
+    {
+        AsyncWriter writer(fs::current_path(), logBaseName, 150, LOG_COUNT);
+        for (auto entry: entries) {
+            writer.write(std::move(entry));
+        }
+    }
+
+    auto it = entries.rbegin();
+    for (const auto& log: logs) {
+        ASSERT_TRUE(fs::exists(log));
+        std::string content = readFileContent(log);
+        EXPECT_EQ(content, *it + "\n");
+        it++;
+    }
+    
+    for (const auto& log: logs) {
+        std::filesystem::remove(log);
     }
 }

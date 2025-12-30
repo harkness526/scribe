@@ -11,6 +11,7 @@ public:
     ~SyncWriter() = default;
 
     virtual void write(std::string&& entry) override;
+    virtual void write(const std::string& entry) override;
 
 protected:
     std::filesystem::path createLogFilename(size_t fileIdx);

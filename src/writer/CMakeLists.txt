@@ -1,6 +1,7 @@
 file(GLOB SYNC_WRITER_SRC sync/*.cc )
+file(GLOB ASYNC_WRITER_SRC async/*.cc )
 
-add_library(writer OBJECT ${SYNC_WRITER_SRC})
+add_library(writer OBJECT ${SYNC_WRITER_SRC} ${ASYNC_WRITER_SRC})
 target_include_directories(writer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB WRITER_TESTS_SRC tests/*.cc )

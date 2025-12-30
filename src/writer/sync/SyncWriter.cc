@@ -21,7 +21,8 @@ SyncWriter::SyncWriter(std::filesystem::path folder,
     }    
 };
 
-void SyncWriter::write(std::string&& entry)
+
+void SyncWriter::write(const std::string& entry)
 {
     if (currentSize_ + entry.size() > maxSize_) {
         roll();
@@ -31,6 +32,11 @@ void SyncWriter::write(std::string&& entry)
     log_ << entry << std::endl;
 
     currentSize_ += entry.size() + 1;
+}
+
+void SyncWriter::write(std::string&& entry)
+{
+    write(entry);
 }
 
 void SyncWriter::roll()
